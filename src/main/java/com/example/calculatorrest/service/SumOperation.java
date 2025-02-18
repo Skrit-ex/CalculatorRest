@@ -13,7 +13,7 @@ public class SumOperation implements CalculatorRepository {
 
     @Override
     public void process() {
-        operation.setResult(operation.getNum1()+ operation.getNum1());
+        operation.setResult(operation.getNum1()+ operation.getNum2());
     }
 
     @Override

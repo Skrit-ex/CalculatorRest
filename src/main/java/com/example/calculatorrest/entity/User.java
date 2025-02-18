@@ -2,6 +2,7 @@ package com.example.calculatorrest.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
 import lombok.RequiredArgsConstructor;
 
 @Table(name = "user_operation")

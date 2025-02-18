@@ -13,13 +13,11 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class UserService {
-
-    private List<User> userList = new ArrayList<>();
     @Autowired
     private UserRepository userRepository;
 
     public Optional<List<User>> findAll(){
-        userList = userRepository.findAll();
+        List<User> userList = userRepository.findAll();
         return Optional.of(userList);
     }
     public Optional<User> findById(Long id) {

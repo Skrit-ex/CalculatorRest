@@ -30,6 +30,7 @@ public class CalculatorService {
         Optional<CalculatorRepository> optionalCalculatorRepository = OperationFactory.createOperation(operation);
             if(optionalCalculatorRepository.isPresent()){
                 CalculatorRepository calculatorRepository = optionalCalculatorRepository.get();
+                calculatorRepository.process();
                 if(operation.getUser() != null){
                     operationRepository.save(calculatorRepository.getFinalResult());
                 }
