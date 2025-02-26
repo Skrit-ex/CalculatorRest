@@ -1,9 +1,10 @@
 package com.example.calculatorrest.entity;
 
-import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Cascade;
+
+
+import javax.persistence.*;
 
 @Data
 @RequiredArgsConstructor

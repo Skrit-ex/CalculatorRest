@@ -1,9 +1,10 @@
 package com.example.calculatorrest.entity;
 
-import jakarta.persistence.*;
 import lombok.Data;
 
 import lombok.RequiredArgsConstructor;
+
+import javax.persistence.*;
 
 @Table(name = "user_operation")
 @Entity
