@@ -1,5 +1,6 @@
 package com.example.calculatorrest.config;
 
+import com.example.calculatorrest.exception.FilesNotFoundException;
 import com.example.calculatorrest.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleAllException(Exception ex, WebRequest request){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @ExceptionHandler(FilesNotFoundException.class)
+    public ResponseEntity<String> handlerFilesNotFoundException(FilesNotFoundException ex, WebRequest request){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
 

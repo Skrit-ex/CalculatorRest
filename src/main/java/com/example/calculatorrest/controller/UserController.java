@@ -27,10 +27,10 @@ public class UserController {
 
     @Operation(description = "SaveUser")
     @PostMapping("/saveUser")
-    public ResponseEntity<User> saveUser(@RequestBody User user){
+    public ResponseEntity<String> saveUser(@RequestBody User user){
         userService.saveUser(user);
         log.info("User " + user.getUsername() + " was saved");
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok("user saved with id" + user.getId());
     }
     @Operation(description = "DeleteUser")
     @DeleteMapping("/delete/{id}")
@@ -65,6 +65,7 @@ public class UserController {
     @Operation(description = "FindAllUser")
     @GetMapping("/showUsers")
     public ResponseEntity<?> findAll(){
+        log.info("Show all users");
         return ResponseEntity.ok(userService.findAll());
       }
     }

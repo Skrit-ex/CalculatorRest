@@ -2,6 +2,7 @@ package com.example.calculatorrest.service;
 
 import com.example.calculatorrest.entity.Operation;
 import com.example.calculatorrest.entity.User;
+import com.example.calculatorrest.exception.FilesNotFoundException;
 import com.example.calculatorrest.factory.OperationFactory;
 import com.example.calculatorrest.repository.CalculatorRepository;
 import com.example.calculatorrest.repository.OperationRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 @Service
@@ -42,4 +44,20 @@ public class CalculatorService {
             return Optional.empty();
     }
 
-}
+    public Optional<List<Operation>> getAllOperation(){
+        List<Operation> all = operationRepository.findAll();
+        if(all.isEmpty()){
+            log.error("files not found or other errors");
+            return Optional.empty();
+        }
+        return Optional.of(all);
+    }
+//    public List<Operation> getAllOperation(){
+//        List<Operation> all = operationRepository.findAll();
+//        if(all.isEmpty()){
+//            log.error("Files not found");
+//            throw new FilesNotFoundException("Files in baseDate not found or other errors");
+//        }
+//            return all;
+//        }
+    }
