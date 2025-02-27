@@ -5,6 +5,8 @@ import com.example.calculatorrest.entity.User;
 import com.example.calculatorrest.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -76,5 +78,14 @@ public class UserService implements UserDetailsService {
                     .password(user1.getPassword())
                     .roles(user1.getRoles().toArray(new String[0]))
                     .build();
+    }
+
+    public User getCurrentUser (){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails){
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return findByUsername(userDetails.getUsername()).orElse(null);
+        }
+        return null;
     }
 }

@@ -28,6 +28,16 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @GetMapping("/currentUser")
+    public ResponseEntity<User> currentUser1(){
+        User currentUser = userService.getCurrentUser();
+        if(currentUser != null){
+            return ResponseEntity.ok(currentUser);
+        }else {
+            return ResponseEntity.status(401).build();
+        }
+    }
+
     @Operation(description = "registerUser")
     @PostMapping("/saveUser")
     public ResponseEntity<String> saveUser(@RequestBody User user){
@@ -46,7 +56,6 @@ public class UserController {
         }else {
             throw new ResourceNotFoundException("User not found with id = " + id);
         }
-
     }
     private final Map<String, byte[]> avatars = new HashMap<>();
 
