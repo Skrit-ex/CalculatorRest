@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -43,6 +44,7 @@ public class UserService implements UserDetailsService {
     }
 
     public Optional<User> saveUser(User user){
+        user.setRoles(Set.of("ROLE_USER"));
         userRepository.save(user);
         return Optional.of(user);
     }
