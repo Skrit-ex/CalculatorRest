@@ -73,11 +73,11 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found with username : " + username);
         }
         User user1 = user.get();
-            return org.springframework.security.core.userdetails.User.builder()
-                    .username(user1.getUsername())
-                    .password(user1.getPassword())
-                    .roles(user1.getRoles().toArray(new String[0]))
-                    .build();
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user1.getUsername())
+                .password(user1.getPassword())
+                .roles(user1.getRoles().toArray(new String[0]))
+                .build();
     }
 
     public User getCurrentUser (){

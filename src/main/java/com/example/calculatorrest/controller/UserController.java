@@ -64,7 +64,7 @@ public class UserController {
     public ResponseEntity<Void> upAvatar(@PathVariable String username,
                                          MultipartFile file) {
         if(file.isEmpty()){
-           return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().build();
         }
         avatars.put(username, file.getBytes());
         return ResponseEntity.ok().build();
@@ -82,9 +82,9 @@ public class UserController {
     public ResponseEntity<?> findAll(){
         log.info("Show all users");
         return ResponseEntity.ok(userService.findAll());
-      }
+    }
 
-      @Operation(description = "Login")
+    @Operation(description = "Login")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user){
         Optional <User> userFindByUsername = userService.findByUsername(user.getUsername());
@@ -98,5 +98,5 @@ public class UserController {
                 return ResponseEntity.status(401).body("Invalid credentials");
             }
         }
-      }
     }
+}

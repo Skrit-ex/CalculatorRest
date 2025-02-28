@@ -1,0 +1,9 @@
+POST http://localhost:8081/user/saveUser
+#Authorization: Basic base64encoded(username:password)
+Content-Type: application/json
+
+{
+  "id": 1,
+  "username": "test4111 ",
+  "password": "test2"
+}
