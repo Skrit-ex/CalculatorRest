@@ -37,7 +37,6 @@ public class UserController {
             return ResponseEntity.status(401).build();
         }
     }
-
     @Operation(description = "registerUser")
     @PostMapping("/saveUser")
     public ResponseEntity<String> saveUser(@RequestBody User user){
@@ -45,17 +44,6 @@ public class UserController {
         userService.saveUser(user);
         log.info("User " + user.getUsername() + " was saved");
         return ResponseEntity.ok("user saved with id" + user.getId());
-    }
-    @Operation(description = "DeleteUser")
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id){
-        Optional<User> deleteUser = userService.deleteUser(id);
-
-        if(deleteUser.isPresent()){
-            return ResponseEntity.ok("User was deleted successfully");
-        }else {
-            throw new ResourceNotFoundException("User not found with id = " + id);
-        }
     }
     private final Map<String, byte[]> avatars = new HashMap<>();
 

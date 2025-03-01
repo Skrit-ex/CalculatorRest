@@ -60,6 +60,18 @@ public class UserService implements UserDetailsService {
             return Optional.empty();
         }
     }
+
+    public Optional<User> deleteUserByUsername(String username){
+        Optional<User> optionalUserName = userRepository.findByUsername(username);
+        if(optionalUserName.isEmpty()){
+            log.error("user with username " + username + " not found");
+            return Optional.empty();
+        }
+        userRepository.delete(optionalUserName.get());
+        log.info("User with username " + username + " was deleted");
+        return optionalUserName;
+    }
+
     public Optional<User> findByUsername (String username){
         Optional<User> findUsername = userRepository.findByUsername(username);
         if(findUsername.isEmpty()){

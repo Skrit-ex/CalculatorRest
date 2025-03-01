@@ -23,7 +23,7 @@ public class SecurityConfig {
                     .csrf().disable()
                     .authorizeRequests(authorizeRequests ->
                             authorizeRequests
-                                    .antMatchers("/user/**").hasRole("USER")
+                                    .antMatchers("/user/**").permitAll()
                                     .antMatchers("/admin/**").hasRole("ADMIN")
                                     .anyRequest().authenticated()
                     )
