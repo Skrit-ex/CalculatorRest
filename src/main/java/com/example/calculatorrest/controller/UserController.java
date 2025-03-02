@@ -2,6 +2,7 @@ package com.example.calculatorrest.controller;
 
 import com.example.calculatorrest.exception.ResourceNotFoundException;
 import com.example.calculatorrest.entity.User;
+import com.example.calculatorrest.repository.UserRepository;
 import com.example.calculatorrest.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.SneakyThrows;
@@ -27,6 +28,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private UserService userService;
     @Autowired
@@ -68,6 +72,15 @@ public class UserController {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_PNG_VALUE);
         return new ResponseEntity<>(avatars.get(username), httpHeaders, HttpStatus.OK);
     }
+//
+//    @GetMapping("/getUsername/{username}")
+//    public ResponseEntity<?> findUsername(@PathVariable String username){
+//        Optional<User> user = userRepository.findByUsername(username);
+//        if(user.isEmpty()){
+//            return ResponseEntity.status(404).body("not found");
+//        }
+//        return ResponseEntity.ok(user);
+//    }
 
     @Operation(description = "FindAllUser")
     @GetMapping("/showUsers")

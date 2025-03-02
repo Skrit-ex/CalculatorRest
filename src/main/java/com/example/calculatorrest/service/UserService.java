@@ -102,6 +102,10 @@ public class UserService implements UserDetailsService {
             if (authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
                 UserDetails userDetails = (UserDetails) authentication.getPrincipal();
                 log.error("Authentication user " + userDetails);
+                User user = findByUsername(userDetails.getUsername()).orElse(null);
+                if(user == null){
+                    log.error("user " + userDetails.getUsername());
+                }
                 return findByUsername(userDetails.getUsername()).orElse(null);
             }
         }
