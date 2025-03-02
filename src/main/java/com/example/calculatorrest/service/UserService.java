@@ -94,22 +94,37 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
-    public User getCurrentUser (){
+    public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication != null) {
-            log.error("authentication  is authenticated " + authentication.isAuthenticated());
+            log.error("authentication is authenticated " + authentication.isAuthenticated());
             log.error("principal " + authentication.getPrincipal());
+
             if (authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
+                log.error("User is authenticated");
+                log.error("Principal is instance of UserDetails");
                 UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+                log.error(userDetails.getUsername() + " username");
                 log.error("Authentication user " + userDetails);
                 User user = findByUsername(userDetails.getUsername()).orElse(null);
                 if(user == null){
                     log.error("user " + userDetails.getUsername());
                 }
-                return findByUsername(userDetails.getUsername()).orElse(null);
+                return user;
+            } else if (authentication.getPrincipal() instanceof String) {
+                log.error("Principal is a string: " + authentication.getPrincipal());
+                String username = (String) authentication.getPrincipal();
+                User user = findByUsername(username).orElse(null);
+                if(user == null){
+                    log.error("user " + username);
+                }
+                return user;
+            } else {
+                log.error("Principal is of unknown type: " + authentication.getPrincipal().getClass().getName());
             }
         }
         log.warn("Authentication is null or not authenticated");
         return null;
     }
+
 }
