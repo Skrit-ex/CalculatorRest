@@ -96,10 +96,16 @@ public class UserService implements UserDetailsService {
 
     public User getCurrentUser (){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails){
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            return findByUsername(userDetails.getUsername()).orElse(null);
+        if(authentication != null) {
+            log.error("authentication  is authenticated " + authentication.isAuthenticated());
+            log.error("principal " + authentication.getPrincipal());
+            if (authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
+                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+                log.error("Authentication user " + userDetails);
+                return findByUsername(userDetails.getUsername()).orElse(null);
+            }
         }
+        log.warn("Authentication is null or not authenticated");
         return null;
     }
 }

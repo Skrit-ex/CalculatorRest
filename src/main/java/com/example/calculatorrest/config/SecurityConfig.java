@@ -25,6 +25,7 @@ public class SecurityConfig {
                             authorizeRequests
                                     .antMatchers("/user/**").permitAll()
                                     .antMatchers("/admin/**").hasRole("ADMIN")
+                                    .antMatchers("/calc/**").authenticated()
                                     .anyRequest().authenticated()
                     )
                     .httpBasic();

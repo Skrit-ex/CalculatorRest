@@ -19,11 +19,13 @@ public class CalculatorService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private UserService userService;
+    @Autowired
     private OperationRepository operationRepository;
 
     public Optional<Operation> calculate (Operation operation){
 
-        User user = userRepository.findById(operation.getId()).orElse(null);
+        User user = userService.getCurrentUser();
         if(user != null){
             operation.setUser(user);
         }else {
