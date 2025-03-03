@@ -20,5 +20,6 @@ public class Operation {
     private Double result;
     @OneToOne(cascade = CascadeType.REMOVE)
     private User user;
+    @Enumerated(EnumType.STRING)
     private OperationType type;
 }

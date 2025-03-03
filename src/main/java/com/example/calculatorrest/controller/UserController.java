@@ -48,6 +48,10 @@ public class UserController {
     @Operation(description = "registerUser")
     @PostMapping("/saveUser")
     public ResponseEntity<String> saveUser(@RequestBody User user){
+        Optional<User> userOptional = userService.findByUsername(user.getUsername());
+        if(userOptional.isPresent() && userOptional.get().getUsername().equals(user.getUsername())){
+            return ResponseEntity.badRequest().body("User with username '" + user.getUsername() + "' already exist");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.saveUser(user);
         log.info("User " + user.getUsername() + " was saved");
