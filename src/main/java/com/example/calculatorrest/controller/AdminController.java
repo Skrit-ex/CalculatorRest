@@ -17,6 +17,22 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User user){
+        userService.saveAdmin(user);
+        return ResponseEntity.ok("admin login successful");
+    }
+
+    @GetMapping("/currentUser")
+    public ResponseEntity<User> currentUser1(){
+        User currentUser = userService.getCurrentUser();
+        if(currentUser != null){
+            return ResponseEntity.ok(currentUser);
+        }else {
+            return ResponseEntity.status(401).build();
+        }
+    }
     @Operation(description = "Delete user by username")
     @DeleteMapping("/deleteUser/{username}")
     public ResponseEntity<String> deleteUser(@PathVariable String username){

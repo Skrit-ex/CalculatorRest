@@ -3,6 +3,7 @@ package com.example.calculatorrest.service;
 import com.example.calculatorrest.config.SecurityConfig;
 import com.example.calculatorrest.entity.User;
 import com.example.calculatorrest.repository.UserRepository;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -27,24 +28,46 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    public Optional<List<User>> findAll(){
+    public Optional<List<User>> findAll() {
         List<User> userList = userRepository.findAll();
         return Optional.of(userList);
     }
+
     public Optional<User> findById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
 
-        if (optionalUser.isPresent()){
+        if (optionalUser.isPresent()) {
             log.info("User with id " + id + " was found");
             return optionalUser;
-        }else {
+        } else {
             log.error("user id not found");
             return Optional.empty();
         }
     }
 
-    public Optional<User> saveUser(User user){
+    public Optional<User> saveUser(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User is null");
+        }
+        Optional<User> userOptional = userRepository.findByUsername(user.getUsername());
+        if (userOptional.isPresent()) {
+            return Optional.empty();
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Set.of("ROLE_USER"));
+        userRepository.save(user);
+        return Optional.of(user);
+    }
+
+    public Optional<User> saveAdmin(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User is empty/null");
+        }
+        Optional<User> newUser = userRepository.findByUsername(user.getUsername());
+        if (newUser.isPresent()) {
+            return Optional.empty();
+        }
+        user.setRoles(Set.of("ROLE_ADMIN"));
         userRepository.save(user);
         return Optional.of(user);
     }
@@ -61,9 +84,9 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public Optional<User> deleteUserByUsername(String username){
+    public Optional<User> deleteUserByUsername(String username) {
         Optional<User> optionalUserName = userRepository.findByUsername(username);
-        if(optionalUserName.isEmpty()){
+        if (optionalUserName.isEmpty()) {
             log.error("user with username " + username + " not found");
             return Optional.empty();
         }
@@ -72,9 +95,9 @@ public class UserService implements UserDetailsService {
         return optionalUserName;
     }
 
-    public Optional<User> findByUsername (String username){
+    public Optional<User> findByUsername(String username) {
         Optional<User> findUsername = userRepository.findByUsername(username);
-        if(findUsername.isEmpty()){
+        if (findUsername.isEmpty()) {
             return Optional.empty();
         }
         return findUsername;
@@ -82,8 +105,8 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional <User> user = userRepository.findByUsername(username);
-        if (user.isEmpty()){
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isEmpty()) {
             throw new UsernameNotFoundException("User not found with username : " + username);
         }
         User user1 = user.get();
@@ -96,27 +119,27 @@ public class UserService implements UserDetailsService {
 
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null) {
+        if (authentication != null) {
             log.error("authentication is authenticated " + authentication.isAuthenticated());
             log.error("principal " + authentication.getPrincipal());
 
             if (authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
-                log.error("User is authenticated");
-                log.error("Principal is instance of UserDetails");
+                log.info("User is authenticated");
+                log.info("Principal is instance of UserDetails");
                 UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-                log.error(userDetails.getUsername() + " username");
-                log.error("Authentication user " + userDetails);
+                log.info(userDetails.getUsername() + " username");
+                log.info("Authentication user " + userDetails);
                 User user = findByUsername(userDetails.getUsername()).orElse(null);
-                if(user == null){
-                    log.error("user " + userDetails.getUsername());
+                if (user == null) {
+                    log.info("user " + userDetails.getUsername());
                 }
                 return user;
             } else if (authentication.getPrincipal() instanceof String) {
-                log.error("Principal is a string: " + authentication.getPrincipal());
+                log.warn("Principal is a string: " + authentication.getPrincipal());
                 String username = (String) authentication.getPrincipal();
                 User user = findByUsername(username).orElse(null);
-                if(user == null){
-                    log.error("user " + username);
+                if (user == null) {
+                    log.error("Error, user not found " + username);
                 }
                 return user;
             } else {

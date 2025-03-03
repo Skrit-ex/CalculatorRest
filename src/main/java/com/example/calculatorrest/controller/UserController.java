@@ -30,34 +30,24 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private UserService userService;
+    private final Map<String, byte[]> avatars = new HashMap<>();
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @GetMapping("/currentUser")
-    public ResponseEntity<User> currentUser1(){
-        User currentUser = userService.getCurrentUser();
-        if(currentUser != null){
-            return ResponseEntity.ok(currentUser);
-        }else {
-            return ResponseEntity.status(401).build();
-        }
-    }
     @Operation(description = "registerUser")
     @PostMapping("/saveUser")
     public ResponseEntity<String> saveUser(@RequestBody User user){
-        Optional<User> userOptional = userService.findByUsername(user.getUsername());
-        if(userOptional.isPresent() && userOptional.get().getUsername().equals(user.getUsername())){
-            return ResponseEntity.badRequest().body("User with username '" + user.getUsername() + "' already exist");
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.saveUser(user);
         log.info("User " + user.getUsername() + " was saved");
-        return ResponseEntity.ok("user saved with id" + user.getId());
+        return ResponseEntity.ok("user saved with id->" + user.getId());
     }
-    private final Map<String, byte[]> avatars = new HashMap<>();
+    @PostMapping("/saveUser/key")
+    public ResponseEntity<String> saveUs(@RequestBody User user){
+        userService.saveAdmin(user);
+        return ResponseEntity.ok("UserAdmin was saved");
+    }
 
     @SneakyThrows
     @PostMapping("/{username}/upload")
@@ -76,15 +66,6 @@ public class UserController {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_PNG_VALUE);
         return new ResponseEntity<>(avatars.get(username), httpHeaders, HttpStatus.OK);
     }
-//
-//    @GetMapping("/getUsername/{username}")
-//    public ResponseEntity<?> findUsername(@PathVariable String username){
-//        Optional<User> user = userRepository.findByUsername(username);
-//        if(user.isEmpty()){
-//            return ResponseEntity.status(404).body("not found");
-//        }
-//        return ResponseEntity.ok(user);
-//    }
 
     @Operation(description = "FindAllUser")
     @GetMapping("/showUsers")
