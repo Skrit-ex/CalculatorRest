@@ -6,7 +6,9 @@ import com.example.calculatorrest.repository.UserRepository;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -67,6 +69,7 @@ public class UserService implements UserDetailsService {
         if (newUser.isPresent()) {
             return Optional.empty();
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Set.of("ROLE_ADMIN"));
         userRepository.save(user);
         return Optional.of(user);
@@ -150,4 +153,23 @@ public class UserService implements UserDetailsService {
         return null;
     }
 
-}
+    public void loginAdmin(User user){
+        Optional<User> optionalUser = userRepository.findByUsername(user.getUsername());
+
+        if(optionalUser.isEmpty()){
+            log.error("Error not found or field is empty");
+            return;
+        }
+        User user1 = optionalUser.get();
+        if(!passwordEncoder.matches(user.getPassword(), user1.getPassword())){
+            log.error("Invalid password");
+            return;
+        }
+        UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword(),
+                        List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                log.info("User authentication successful");
+        }
+    }
+

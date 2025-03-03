@@ -18,11 +18,6 @@ public class AdminController {
     private UserService userService;
 
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user){
-        userService.saveAdmin(user);
-        return ResponseEntity.ok("admin login successful");
-    }
 
     @GetMapping("/currentUser")
     public ResponseEntity<User> currentUser1(){

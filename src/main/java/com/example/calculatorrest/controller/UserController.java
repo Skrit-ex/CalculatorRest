@@ -69,14 +69,14 @@ public class UserController {
 
     @Operation(description = "FindAllUser")
     @GetMapping("/showUsers")
-    public ResponseEntity<?> findAll(){
+    public ResponseEntity<Object> findAll(){
         log.info("Show all users");
         return ResponseEntity.ok(userService.findAll());
     }
 
     @Operation(description = "Login")
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user){
+    public ResponseEntity<String> login(@RequestBody User user){
         Optional <User> userFindByUsername = userService.findByUsername(user.getUsername());
         if(userFindByUsername.isEmpty()){
             return ResponseEntity.status(404).body("User not found with username " + user.getUsername());
@@ -92,5 +92,10 @@ public class UserController {
                 return ResponseEntity.status(401).body("Invalid credentials");
             }
         }
+    }
+    @PostMapping("/login/key")
+    public ResponseEntity<?> loginAdmin(@RequestBody User user){
+        userService.loginAdmin(user);
+        return ResponseEntity.ok("Admin authenticated successful");
     }
 }
