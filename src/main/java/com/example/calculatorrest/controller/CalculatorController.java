@@ -19,8 +19,6 @@ import java.util.Optional;
 public class CalculatorController {
 
     @Autowired
-    private OperationRepository operationRepository;
-    @Autowired
     private CalculatorService calculatorService;
 
     @PostMapping("/calculate")

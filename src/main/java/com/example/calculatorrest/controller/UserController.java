@@ -1,8 +1,6 @@
 package com.example.calculatorrest.controller;
 
-import com.example.calculatorrest.exception.ResourceNotFoundException;
 import com.example.calculatorrest.entity.User;
-import com.example.calculatorrest.repository.UserRepository;
 import com.example.calculatorrest.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.SneakyThrows;
@@ -96,6 +94,11 @@ public class UserController {
     @PostMapping("/login/key")
     public ResponseEntity<?> loginAdmin(@RequestBody User user){
         userService.loginAdmin(user);
-        return ResponseEntity.ok("Admin authenticated successful");
+        return ResponseEntity.status(200).body("Admin authenticated successful");
+    }
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout (){
+        SecurityContextHolder.clearContext();
+        return ResponseEntity.status(200).body("Logout successful");
     }
 }

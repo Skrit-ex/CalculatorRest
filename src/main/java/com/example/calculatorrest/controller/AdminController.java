@@ -17,35 +17,35 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
-
-
     @GetMapping("/currentUser")
-    public ResponseEntity<User> currentUser1(){
+    public ResponseEntity<User> currentUser1() {
         User currentUser = userService.getCurrentUser();
-        if(currentUser != null){
+        if (currentUser != null) {
             return ResponseEntity.ok(currentUser);
-        }else {
+        } else {
             return ResponseEntity.status(401).build();
         }
     }
+
     @Operation(description = "Delete user by username")
     @DeleteMapping("/deleteUser/{username}")
-    public ResponseEntity<String> deleteUser(@PathVariable String username){
+    public ResponseEntity<String> deleteUser(@PathVariable String username) {
         Optional<User> user = userService.deleteUserByUsername(username);
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             return ResponseEntity.badRequest().body("User with username : '" + username + "' not found");
-        }else {
+        } else {
             return ResponseEntity.ok("User deleted successful");
         }
     }
+
     @Operation(description = "DeleteUserById")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id){
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         Optional<User> deleteUser = userService.deleteUser(id);
 
-        if(deleteUser.isPresent()){
+        if (deleteUser.isPresent()) {
             return ResponseEntity.ok("User was deleted successfully");
-        }else {
+        } else {
             throw new ResourceNotFoundException("User not found with id = " + id);
         }
     }
